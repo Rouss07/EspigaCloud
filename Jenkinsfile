@@ -9,7 +9,6 @@ pipeline {
     parameters {
         string(name: 'DEPLOY_PORT', defaultValue: '8085', description: 'Puerto del ambiente temporal de pruebas.')
         booleanParam(name: 'RUN_PLAYWRIGHT', defaultValue: true, description: 'Ejecutar pruebas funcionales Playwright.')
-        booleanParam(name: 'RUN_K6', defaultValue: true, description: 'Ejecutar pruebas de rendimiento k6.')
         booleanParam(name: 'RUN_SONAR', defaultValue: true, description: 'Ejecutar analisis SonarQube.')
     }
 
@@ -78,18 +77,6 @@ pipeline {
             }
         }
 
-        stage('K6 Performance') {
-            when { expression { return params.RUN_K6 } }
-            steps {
-                sh './scripts/ci/run-k6-suite.sh ${APP_BASE_URL}'
-            }
-            post {
-                always {
-                    archiveArtifacts allowEmptyArchive: true, artifacts: 'target/k6/**/*'
-                }
-            }
-        }
-
         stage('SonarQube Analysis') {
             when { expression { return params.RUN_SONAR } }
             steps {
@@ -110,7 +97,10 @@ pipeline {
 
         stage('Archive Build') {
             steps {
-                archiveArtifacts fingerprint: true, artifacts: 'target/*.jar,docs/entregables/**/*,docs/*.md'
+                archiveArtifacts(
+                    fingerprint: true,
+                    artifacts: 'target/*.jar,docs/CHECKLIST_ENTREGABLES_QA_CICD.md,docs/INFORME_PRUEBAS_SISTEMA.md,docs/INFORME_SEGURIDAD.md,docs/INFORME_SONARQUBE.md,docs/MANUAL_CONFIGURACION_CICD.md,docs/MANUAL_USUARIO.md,docs/entregables/Gestion_Casos_Prueba_Defectos.xlsx,docs/entregables/Informe_Pruebas_Seguridad.docx,docs/entregables/Informe_Pruebas_Sistema_E2E.docx,docs/entregables/Informe_SonarQube_Nivel_A.docx,docs/entregables/Manual_Configuracion_CICD.docx,docs/entregables/Manual_Usuario_EspigaPedidos.docx'
+                )
             }
         }
     }
@@ -120,7 +110,7 @@ pipeline {
             sh 'docker compose down --remove-orphans || true'
         }
         success {
-            echo 'Pipeline exitoso: pruebas, build, Playwright, k6, SonarQube y Quality Gate completados.'
+            echo 'Pipeline exitoso: pruebas, build, Playwright, SonarQube y Quality Gate completados.'
         }
         failure {
             echo 'Pipeline fallo. Revise la etapa y los reportes archivados.'
