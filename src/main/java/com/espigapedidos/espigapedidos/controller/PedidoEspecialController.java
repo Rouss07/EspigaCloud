@@ -48,8 +48,8 @@ public class PedidoEspecialController {
                                         @RequestParam("archivoImagen") MultipartFile archivoImagen,
                                         Model model) throws IOException {
         if (tiendaId == null) resultado.reject("tienda.required", "Seleccione una tienda");
-        if (!archivoImagen.isEmpty() && (archivoImagen.getContentType() == null ||
-                !archivoImagen.getContentType().startsWith("image/"))) {
+        String contentType = archivoImagen.getContentType();
+        if (!archivoImagen.isEmpty() && (contentType == null || !contentType.startsWith("image/"))) {
             resultado.reject("imagen.invalid", "El archivo debe ser una imagen");
         }
         if (resultado.hasErrors()) {

@@ -13,7 +13,7 @@ public class PedidoEspecialForm {
     @Pattern(regexp = "^[\\p{L} .'-]{2,100}$", message = "El nombre del cliente solo debe contener letras")
     private String cliente;
     @NotBlank(message = "El teléfono es obligatorio")
-    @Pattern(regexp = "^[0-9]{7,15}$", message = "Ingrese entre 7 y 15 números, sin letras")
+    @Pattern(regexp = "^\\d{7,15}$", message = "Ingrese entre 7 y 15 números, sin letras")
     private String telefono;
     @NotBlank(message = "La descripción es obligatoria")
     @Size(max = 500, message = "La descripción no puede superar 500 caracteres")

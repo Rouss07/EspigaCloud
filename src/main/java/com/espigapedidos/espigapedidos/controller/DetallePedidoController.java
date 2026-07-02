@@ -17,6 +17,8 @@ import jakarta.validation.Valid;
 @RequestMapping("/detalle-pedido")
 public class DetallePedidoController {
 
+    private static final String PEDIDO_ATTR = "pedido";
+
     private final DetallePedidoService detallePedidoService;
     private final PedidoService pedidoService;
     private final ProductoService productoService;
@@ -32,13 +34,13 @@ public class DetallePedidoController {
     @GetMapping("/{pedidoId}")
     public String verDetallePedido(@PathVariable Long pedidoId, Model model) {
         model.addAttribute("detalles", detallePedidoService.listarPorPedido(pedidoId));
-        model.addAttribute("pedido", pedidoService.obtenerPedidoPorId(pedidoId));
+        model.addAttribute(PEDIDO_ATTR, pedidoService.obtenerPedidoPorId(pedidoId));
         return "detallepedido/lista";
     }
 
     @GetMapping("/nuevo/{pedidoId}")
     public String mostrarFormularioNuevo(@PathVariable Long pedidoId, Model model) {
-        model.addAttribute("pedido", pedidoService.obtenerPedidoPorId(pedidoId));
+        model.addAttribute(PEDIDO_ATTR, pedidoService.obtenerPedidoPorId(pedidoId));
         model.addAttribute("productos", productoService.listarProductos());
         model.addAttribute("detallePedido", new DetallePedidoForm());
         return "detallepedido/formulario";
@@ -52,7 +54,7 @@ public class DetallePedidoController {
                                  Model model) {
         if (productoId == null) resultado.reject("producto.required", "Seleccione un producto");
         if (resultado.hasErrors()) {
-            model.addAttribute("pedido", pedidoService.obtenerPedidoPorId(pedidoId));
+            model.addAttribute(PEDIDO_ATTR, pedidoService.obtenerPedidoPorId(pedidoId));
             model.addAttribute("productos", productoService.listarProductos());
             return "detallepedido/formulario";
         }

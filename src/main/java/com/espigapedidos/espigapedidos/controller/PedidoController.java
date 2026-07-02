@@ -19,6 +19,9 @@ import java.time.ZoneId;
 public class PedidoController {
 
     private static final ZoneId APP_ZONE = ZoneId.of("America/Lima");
+    private static final String PEDIDO_ATTR = "pedido";
+    private static final String TIENDAS_ATTR = "tiendas";
+    private static final String FORM_VIEW = "pedidos/formulario";
 
     private final PedidoService pedidoService;
     private final TiendaService tiendaService;
@@ -38,20 +41,20 @@ public class PedidoController {
     public String mostrarFormularioNuevo(Model model) {
         PedidoForm pedido = new PedidoForm();
         pedido.setFecha(LocalDate.now(APP_ZONE));
-        model.addAttribute("pedido", pedido);
-        model.addAttribute("tiendas", tiendaService.listarTiendas());
-        return "pedidos/formulario";
+        model.addAttribute(PEDIDO_ATTR, pedido);
+        model.addAttribute(TIENDAS_ATTR, tiendaService.listarTiendas());
+        return FORM_VIEW;
     }
 
     @PostMapping("/guardar")
-    public String guardarPedidoValidado(@Valid @ModelAttribute("pedido") PedidoForm pedido,
+    public String guardarPedidoValidado(@Valid @ModelAttribute(PEDIDO_ATTR) PedidoForm pedido,
                                          BindingResult resultado,
                                          @RequestParam(value = "tienda", required = false) Long tiendaId,
                                          Model model) {
         if (tiendaId == null) resultado.reject("tienda.required", "Seleccione una tienda");
         if (resultado.hasErrors()) {
-            model.addAttribute("tiendas", tiendaService.listarTiendas());
-            return "pedidos/formulario";
+            model.addAttribute(TIENDAS_ATTR, tiendaService.listarTiendas());
+            return FORM_VIEW;
         }
         return guardarPedido(pedido, tiendaId);
     }
@@ -67,9 +70,9 @@ public class PedidoController {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.obtenerPedidoPorId(id);
-        model.addAttribute("pedido", PedidoForm.fromEntity(pedido));
-        model.addAttribute("tiendas", tiendaService.listarTiendas());
-        return "pedidos/formulario";
+        model.addAttribute(PEDIDO_ATTR, PedidoForm.fromEntity(pedido));
+        model.addAttribute(TIENDAS_ATTR, tiendaService.listarTiendas());
+        return FORM_VIEW;
     }
 
     @GetMapping("/eliminar/{id}")

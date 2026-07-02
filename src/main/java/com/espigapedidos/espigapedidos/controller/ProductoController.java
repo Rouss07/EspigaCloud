@@ -13,6 +13,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/productos")
 public class ProductoController {
 
+    private static final String PRODUCTO_ATTR = "producto";
+    private static final String FORM_VIEW = "productos/formulario";
+
     private final ProductoService productoService;
 
     public ProductoController(ProductoService productoService) {
@@ -27,14 +30,14 @@ public class ProductoController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        model.addAttribute("producto", new ProductoForm());
-        return "productos/formulario";
+        model.addAttribute(PRODUCTO_ATTR, new ProductoForm());
+        return FORM_VIEW;
     }
 
     @PostMapping("/guardar")
-    public String guardarProductoValidado(@Valid @ModelAttribute("producto") ProductoForm producto,
+    public String guardarProductoValidado(@Valid @ModelAttribute(PRODUCTO_ATTR) ProductoForm producto,
                                            BindingResult resultado) {
-        if (resultado.hasErrors()) return "productos/formulario";
+        if (resultado.hasErrors()) return FORM_VIEW;
         return guardarProducto(producto);
     }
 
@@ -46,8 +49,8 @@ public class ProductoController {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Producto producto = productoService.obtenerProductoPorId(id);
-        model.addAttribute("producto", ProductoForm.fromEntity(producto));
-        return "productos/formulario";
+        model.addAttribute(PRODUCTO_ATTR, ProductoForm.fromEntity(producto));
+        return FORM_VIEW;
     }
 
     @GetMapping("/eliminar/{id}")

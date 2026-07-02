@@ -13,6 +13,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/tiendas")
 public class TiendaController {
 
+    private static final String TIENDA_ATTR = "tienda";
+    private static final String FORM_VIEW = "tiendas/formulario";
+
     private final TiendaService tiendaService;
 
     public TiendaController(TiendaService tiendaService) {
@@ -27,14 +30,14 @@ public class TiendaController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        model.addAttribute("tienda", new TiendaForm());
-        return "tiendas/formulario";
+        model.addAttribute(TIENDA_ATTR, new TiendaForm());
+        return FORM_VIEW;
     }
 
     @PostMapping("/guardar")
-    public String guardarTiendaValidada(@Valid @ModelAttribute("tienda") TiendaForm tienda,
+    public String guardarTiendaValidada(@Valid @ModelAttribute(TIENDA_ATTR) TiendaForm tienda,
                                          BindingResult resultado) {
-        if (resultado.hasErrors()) return "tiendas/formulario";
+        if (resultado.hasErrors()) return FORM_VIEW;
         return guardarTienda(tienda);
     }
 
@@ -46,8 +49,8 @@ public class TiendaController {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Tienda tienda = tiendaService.obtenerTiendaPorId(id);
-        model.addAttribute("tienda", TiendaForm.fromEntity(tienda));
-        return "tiendas/formulario";
+        model.addAttribute(TIENDA_ATTR, TiendaForm.fromEntity(tienda));
+        return FORM_VIEW;
     }
 
     @GetMapping("/eliminar/{id}")

@@ -13,6 +13,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
+    private static final String USUARIO_ATTR = "usuario";
+    private static final String FORM_VIEW = "usuarios/formulario";
+
     private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService usuarioService) {
@@ -27,14 +30,14 @@ public class UsuarioController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        model.addAttribute("usuario", new UsuarioForm());
-        return "usuarios/formulario";
+        model.addAttribute(USUARIO_ATTR, new UsuarioForm());
+        return FORM_VIEW;
     }
 
     @PostMapping("/guardar")
-    public String guardarUsuarioValidado(@Valid @ModelAttribute("usuario") UsuarioForm usuario,
+    public String guardarUsuarioValidado(@Valid @ModelAttribute(USUARIO_ATTR) UsuarioForm usuario,
                                           BindingResult resultado) {
-        if (resultado.hasErrors()) return "usuarios/formulario";
+        if (resultado.hasErrors()) return FORM_VIEW;
         return guardarUsuario(usuario);
     }
 
@@ -46,8 +49,8 @@ public class UsuarioController {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
-        model.addAttribute("usuario", UsuarioForm.fromEntity(usuario));
-        return "usuarios/formulario";
+        model.addAttribute(USUARIO_ATTR, UsuarioForm.fromEntity(usuario));
+        return FORM_VIEW;
     }
 
     @GetMapping("/eliminar/{id}")

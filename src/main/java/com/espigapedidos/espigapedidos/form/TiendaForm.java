@@ -14,7 +14,7 @@ public class TiendaForm {
     @Size(max = 180, message = "La dirección no puede superar 180 caracteres")
     private String direccion;
     @NotBlank(message = "El teléfono es obligatorio")
-    @Pattern(regexp = "^[0-9]{7,15}$", message = "Ingrese entre 7 y 15 números, sin letras")
+    @Pattern(regexp = "^\\d{7,15}$", message = "Ingrese entre 7 y 15 números, sin letras")
     private String telefono;
     @NotBlank(message = "El estado es obligatorio")
     @Pattern(regexp = "(?i)^(activo|inactivo)$", message = "El estado debe ser Activo o Inactivo")
