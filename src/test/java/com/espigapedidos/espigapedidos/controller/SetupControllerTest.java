@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class SetupControllerTest {
@@ -84,5 +85,45 @@ class SetupControllerTest {
         assertEquals("Usuario tienda creado", resultado);
 
         verify(repo).save(any(Usuario.class));
+    }
+
+    @Test
+    void crearAdmin_sinPasswordConfigurado_lanzaExcepcion() {
+
+        UsuarioRepository repo = mock(UsuarioRepository.class);
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+
+        when(repo.findByUsername("admin"))
+                .thenReturn(Optional.empty());
+
+        SetupController controller = new SetupController(repo, encoder, key -> null);
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                controller::crearAdmin
+        );
+
+        assertEquals("La variable de entorno ADMIN_PASSWORD no está definida", ex.getMessage());
+        verify(repo, never()).save(any(Usuario.class));
+    }
+
+    @Test
+    void crearTienda_sinPasswordConfigurado_lanzaExcepcion() {
+
+        UsuarioRepository repo = mock(UsuarioRepository.class);
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+
+        when(repo.findByUsername("tienda"))
+                .thenReturn(Optional.empty());
+
+        SetupController controller = new SetupController(repo, encoder, key -> null);
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                controller::crearTienda
+        );
+
+        assertEquals("La variable de entorno TIENDA_PASSWORD no está definida", ex.getMessage());
+        verify(repo, never()).save(any(Usuario.class));
     }
 }

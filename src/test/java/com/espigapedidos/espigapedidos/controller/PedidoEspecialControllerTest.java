@@ -4,8 +4,10 @@ import com.espigapedidos.espigapedidos.entity.PedidoEspecial;
 import com.espigapedidos.espigapedidos.service.PedidoEspecialService;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.ui.Model;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -110,7 +112,7 @@ class PedidoEspecialControllerTest {
     }
 
     @Test
-    void guardarPedidoEspecialConImagen() throws Exception {
+    void guardarPedidoEspecialConImagen(@TempDir Path tempDir) throws Exception {
 
         PedidoEspecialService pedidoEspecialService = mock(PedidoEspecialService.class);
         TiendaService tiendaService = mock(TiendaService.class);
@@ -132,11 +134,18 @@ class PedidoEspecialControllerTest {
                         tiendaService
                 );
 
-        String vista = controller.guardarPedidoEspecial(
-                pedidoEspecial,
-                1L,
-                archivo
-        );
+        String userDirAnterior = System.getProperty("user.dir");
+        System.setProperty("user.dir", tempDir.toString());
+        String vista;
+        try {
+            vista = controller.guardarPedidoEspecial(
+                    pedidoEspecial,
+                    1L,
+                    archivo
+            );
+        } finally {
+            System.setProperty("user.dir", userDirAnterior);
+        }
 
         assertEquals("redirect:/pedidos-especiales", vista);
 

@@ -1,0 +1,145 @@
+{
+  "info": {
+    "name": "EspigaPedidos - Pruebas Integrales y Parametros",
+    "_postman_id": "e4d48c0c-77af-4e5c-8e66-espigapedidos",
+    "description": "Coleccion para validar disponibilidad, autenticacion y parametros de entrada de la aplicacion MVC EspigaPedidos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Setup admin",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/setup-admin"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Setup admin responde 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Respuesta menciona usuario admin', function () { pm.expect(pm.response.text()).to.match(/admin/i); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login page y CSRF",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login disponible', function () { pm.response.to.have.status(200); });",
+              "const html = pm.response.text();",
+              "const tokenMatch = html.match(/name=\"_csrf\"\\s+value=\"([^\"]+)\"/);",
+              "pm.test('Token CSRF presente', function () { pm.expect(tokenMatch, 'csrf token').to.not.equal(null); });",
+              "if (tokenMatch) { pm.collectionVariables.set('csrfToken', tokenMatch[1]); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login admin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "admin"
+            },
+            {
+              "key": "password",
+              "value": "{{adminPassword}}"
+            },
+            {
+              "key": "_csrf",
+              "value": "{{csrfToken}}"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login redirige al dashboard o mantiene sesion', function () { pm.expect([200, 302]).to.include(pm.response.code); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Productos requiere sesion",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/productos"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Productos responde sin error servidor', function () { pm.expect(pm.response.code).to.be.oneOf([200, 302]); });",
+              "pm.test('No hay error 5xx', function () { pm.expect(pm.response.code).to.be.below(500); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Formulario producto valida campos requeridos",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/productos/nuevo"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Formulario producto responde 200 o redireccion autenticacion', function () { pm.expect(pm.response.code).to.be.oneOf([200, 302]); });",
+              "if (pm.response.code === 200) {",
+              "  const html = pm.response.text();",
+              "  pm.test('nombre requerido', function () { pm.expect(html).to.match(/name=\"nombre\"[^>]*required/); });",
+              "  pm.test('categoria requerida', function () { pm.expect(html).to.match(/name=\"categoria\"[^>]*required/); });",
+              "  pm.test('precio requerido', function () { pm.expect(html).to.match(/name=\"precio\"[^>]*required/); });",
+              "  pm.test('stock requerido', function () { pm.expect(html).to.match(/name=\"stock\"[^>]*required/); });",
+              "}"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8085"
+    },
+    {
+      "key": "adminPassword",
+      "value": "Admin123*"
+    },
+    {
+      "key": "csrfToken",
+      "value": ""
+    }
+  ]
+}
