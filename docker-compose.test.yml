@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${E2E_DB_NAME:-espiga_pedidos_test_tmp}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    tmpfs:
+      - /var/lib/mysql
+
+  selenium:
+    image: selenium/standalone-chrome:4.21.0-20240522
+    platform: linux/amd64
+    shm_size: 2gb
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:4444/status"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  tests:
+    image: maven:3.9.8-eclipse-temurin-17
+    working_dir: /workspace
+    depends_on:
+      mysql:
+        condition: service_healthy
+      selenium:
+        condition: service_healthy
+    environment:
+      SELENIUM_REMOTE_URL: http://selenium:4444/wd/hub
+      E2E_APP_BASE_URL: http://tests:{port}
+      E2E_DB_URL: jdbc:mysql://mysql:3306/${E2E_DB_NAME:-espiga_pedidos_test_tmp}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      E2E_DB_USERNAME: root
+      E2E_DB_PASSWORD: root
+    volumes:
+      - .:/workspace
+      - maven-cache:/root/.m2
+    command: mvn -q -Pe2e -Dspring.profiles.active=e2e -Djacoco.skip=true verify
+
+volumes:
+  maven-cache:
