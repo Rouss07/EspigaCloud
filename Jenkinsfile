@@ -15,7 +15,7 @@ pipeline {
 
     environment {
         SONAR_PROJECT_KEY = 'com.espigapedidos:espigapedidos'
-        APP_BASE_URL = "http://localhost:${params.DEPLOY_PORT}"
+        APP_BASE_URL = "http://host.docker.internal:${params.DEPLOY_PORT}"
         COMPOSE_PROJECT_NAME = "espigacloud-ci-${BUILD_NUMBER}"
         ADMIN_PASSWORD = 'Admin123*'
         TIENDA_PASSWORD = 'Tienda123*'
