@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y ca-certificates
 COPY --from=build-tools /opt/java/openjdk /opt/jdk17
 COPY --from=build-tools /usr/share/maven /usr/share/maven
 COPY --from=docker-cli /usr/local/bin/docker /usr/local/bin/docker
+COPY --from=docker-cli /usr/local/libexec/docker/cli-plugins/docker-compose /usr/local/libexec/docker/cli-plugins/docker-compose
 ENV MAVEN_HOME=/usr/share/maven
 ENV PATH="${MAVEN_HOME}/bin:${PATH}"
 RUN groupadd -f docker && usermod -aG docker jenkins
