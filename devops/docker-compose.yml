@@ -10,11 +10,9 @@ services:
       CASC_JENKINS_CONFIG: /var/jenkins_home/casc/jenkins.yaml
       JENKINS_ADMIN_ID: ${JENKINS_ADMIN_ID:-rosa}
       JENKINS_ADMIN_PASSWORD: ${JENKINS_ADMIN_PASSWORD:?Configure JENKINS_ADMIN_PASSWORD en devops/.env}
-      TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
     volumes:
       - jenkins_home:/var/jenkins_home
       - ./jenkins/jenkins.yaml:/var/jenkins_home/casc/jenkins.yaml:ro
-      - /var/run/docker.sock:/var/run/docker.sock
     networks: [devops]
     depends_on:
       sonarqube: { condition: service_healthy }
