@@ -7,7 +7,6 @@ pipeline {
     }
 
     parameters {
-        string(name: 'COVERAGE_MINIMUM', defaultValue: '1.00', description: 'Cobertura minima JaCoCo. 1.00 exige 100% en lineas e instrucciones.')
         booleanParam(name: 'RUN_SONAR', defaultValue: true, description: 'Ejecutar analisis SonarQube.')
     }
 
@@ -30,7 +29,7 @@ pipeline {
 
         stage('Test and Coverage') {
             steps {
-                sh 'mvn --batch-mode verify -Dspring.profiles.active=test -Dcoverage.minimum=${COVERAGE_MINIMUM}'
+                sh 'mvn --batch-mode -Pcoverage-100 verify -Dspring.profiles.active=test'
             }
             post {
                 always {
