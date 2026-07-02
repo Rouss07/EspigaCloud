@@ -16,7 +16,10 @@ for script in pruebasK6/*/smoke-test.js; do
     container="espigacloud-k6-${BUILD_NUMBER:-local}-$name"
     docker rm -f "$container" >/dev/null 2>&1 || true
     status=0
-    docker run --name "$container" --network host -e BASE_URL="$BASE_URL" "$image" \
+    docker run --name "$container" --network host \
+      -e BASE_URL="$BASE_URL" \
+      -e ADMIN_PASSWORD="${ADMIN_PASSWORD:-Admin123*}" \
+      "$image" \
       run --summary-export "target/k6/${name}-summary.json" "$script" || status=$?
     docker cp "$container:/workspace/target/k6/${name}-summary.json" "target/k6/${name}-summary.json" || true
     docker rm -f "$container" >/dev/null
@@ -25,6 +28,7 @@ for script in pruebasK6/*/smoke-test.js; do
     docker run --rm \
       --network host \
       -e BASE_URL="$BASE_URL" \
+      -e ADMIN_PASSWORD="${ADMIN_PASSWORD:-Admin123*}" \
       -v "$PWD:/workspace" \
       -w /workspace \
       grafana/k6:0.49.0 \

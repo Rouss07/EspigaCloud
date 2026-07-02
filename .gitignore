@@ -33,3 +33,8 @@ build/
 .vscode/
 uploads/
 devops/.env
+
+### Playwright / Node temporal ###
+/node_modules/
+/test-results/
+/package.json

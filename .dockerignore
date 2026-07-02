@@ -1,0 +1,8 @@
+.git
+.idea
+node_modules
+test-results
+uploads
+package.json
+target/*
+!target/*.jar

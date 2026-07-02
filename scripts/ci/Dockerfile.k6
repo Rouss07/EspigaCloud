@@ -2,3 +2,7 @@ FROM grafana/k6:0.49.0
 
 WORKDIR /workspace
 COPY . .
+
+USER root
+RUN mkdir -p /workspace/target/k6 && chown -R k6:k6 /workspace/target/k6
+USER k6
