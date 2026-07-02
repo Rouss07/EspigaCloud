@@ -16,6 +16,9 @@
 
     <form th:action="@{/pedidos/guardar}" th:object="${pedido}" method="post">
         <input type="hidden" th:field="*{id}">
+        <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="error : ${#fields.allErrors()}" th:text="${error}"></div>
+        </div>
 
         <div class="mb-3">
             <label class="form-label">Fecha</label>
@@ -24,7 +27,7 @@
 
         <div class="mb-3">
             <label class="form-label">Estado</label>
-            <input type="text" th:field="*{estado}" class="form-control" placeholder="Pendiente" required>
+            <input type="text" th:field="*{estado}" class="form-control" maxlength="40" placeholder="Pendiente" required>
         </div>
 
         <div class="mb-3">

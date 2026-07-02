@@ -5,7 +5,9 @@ import com.espigapedidos.espigapedidos.form.TiendaForm;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/tiendas")
@@ -30,7 +32,13 @@ public class TiendaController {
     }
 
     @PostMapping("/guardar")
-    public String guardarTienda(@ModelAttribute TiendaForm tienda) {
+    public String guardarTiendaValidada(@Valid @ModelAttribute("tienda") TiendaForm tienda,
+                                         BindingResult resultado) {
+        if (resultado.hasErrors()) return "tiendas/formulario";
+        return guardarTienda(tienda);
+    }
+
+    public String guardarTienda(TiendaForm tienda) {
         tiendaService.guardarTienda(tienda.toEntity());
         return "redirect:/tiendas";
     }

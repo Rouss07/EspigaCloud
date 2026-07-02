@@ -9,7 +9,9 @@ import com.espigapedidos.espigapedidos.service.PedidoService;
 import com.espigapedidos.espigapedidos.service.ProductoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/detalle-pedido")
@@ -43,9 +45,21 @@ public class DetallePedidoController {
     }
 
     @PostMapping("/guardar")
-    public String guardarDetalle(@ModelAttribute DetallePedidoForm detallePedido,
+    public String guardarDetalleValidado(@Valid @ModelAttribute("detallePedido") DetallePedidoForm detallePedido,
+                                 BindingResult resultado,
                                  @RequestParam("pedidoId") Long pedidoId,
-                                 @RequestParam("productoId") Long productoId) {
+                                 @RequestParam(value = "productoId", required = false) Long productoId,
+                                 Model model) {
+        if (productoId == null) resultado.reject("producto.required", "Seleccione un producto");
+        if (resultado.hasErrors()) {
+            model.addAttribute("pedido", pedidoService.obtenerPedidoPorId(pedidoId));
+            model.addAttribute("productos", productoService.listarProductos());
+            return "detallepedido/formulario";
+        }
+        return guardarDetalle(detallePedido, pedidoId, productoId);
+    }
+
+    public String guardarDetalle(DetallePedidoForm detallePedido, Long pedidoId, Long productoId) {
 
         Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
         Producto producto = productoService.obtenerProductoPorId(productoId);

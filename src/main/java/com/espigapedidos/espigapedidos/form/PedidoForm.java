@@ -3,13 +3,17 @@ package com.espigapedidos.espigapedidos.form;
 import com.espigapedidos.espigapedidos.entity.Pedido;
 import com.espigapedidos.espigapedidos.entity.Tienda;
 import lombok.Data;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
 @Data
 public class PedidoForm {
     private Long id;
+    @NotNull(message = "La fecha es obligatoria")
     private LocalDate fecha;
+    @NotBlank(message = "El estado es obligatorio")
+    @Size(max = 40, message = "El estado no puede superar 40 caracteres")
     private String estado;
     private Tienda tienda;
 

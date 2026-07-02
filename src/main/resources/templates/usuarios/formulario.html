@@ -17,20 +17,23 @@
 
     <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
         <input type="hidden" th:field="*{id}">
+        <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="error : ${#fields.allErrors()}" th:text="${error}"></div>
+        </div>
 
         <div class="mb-3">
             <label class="form-label">Nombre</label>
-            <input type="text" th:field="*{nombre}" class="form-control" required>
+            <input type="text" th:field="*{nombre}" class="form-control" minlength="2" maxlength="100" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Username</label>
-            <input type="text" th:field="*{username}" class="form-control" required>
+            <input type="text" th:field="*{username}" class="form-control" minlength="4" maxlength="40" pattern="[A-Za-z0-9._-]+" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Password</label>
-            <input type="password" th:field="*{password}" class="form-control" required>
+            <input type="password" th:field="*{password}" class="form-control" minlength="8" maxlength="100" required>
         </div>
 
         <div class="mb-3">

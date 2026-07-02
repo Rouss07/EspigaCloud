@@ -16,25 +16,33 @@
 
     <form th:action="@{/tiendas/guardar}" th:object="${tienda}" method="post">
         <input type="hidden" th:field="*{id}">
+        <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="error : ${#fields.allErrors()}" th:text="${error}"></div>
+        </div>
 
         <div class="mb-3">
             <label class="form-label">Nombre</label>
-            <input type="text" th:field="*{nombre}" class="form-control" required>
+            <input type="text" th:field="*{nombre}" class="form-control" maxlength="100" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Dirección</label>
-            <input type="text" th:field="*{direccion}" class="form-control" required>
+            <input type="text" th:field="*{direccion}" class="form-control" maxlength="180" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Teléfono</label>
-            <input type="text" th:field="*{telefono}" class="form-control" required>
+            <input type="tel" th:field="*{telefono}" class="form-control" inputmode="numeric" pattern="[0-9]{7,15}" minlength="7" maxlength="15" required>
+            <div class="text-danger" th:errors="*{telefono}"></div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Estado</label>
-            <input type="text" th:field="*{estado}" class="form-control" required>
+            <select th:field="*{estado}" class="form-control" required>
+                <option value="">Seleccione un estado</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
         </div>
 
         <button type="submit" class="btn btn-success">Guardar</button>

@@ -23,7 +23,7 @@ tool:
   maven:
     installations: [{ name: "Maven3", home: "/usr/share/maven" }]
 unclassified:
-  location: { url: "http://localhost:8080/" }
+  location: { url: "http://localhost:8090/" }
   sonarGlobalConfiguration:
     buildWrapperEnabled: true
     installations:

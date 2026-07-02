@@ -34,6 +34,36 @@ test('validacion HTML5 impide guardar producto sin parametros requeridos', async
   await expect(categoria).toHaveAttribute('required', '');
   await expect(precio).toHaveAttribute('required', '');
   await expect(stock).toHaveAttribute('required', '');
+  await expect(precio).toHaveAttribute('min', '0.01');
+  await expect(stock).toHaveAttribute('min', '1');
+});
+
+test('producto rechaza precio cero, negativo y letras', async ({ page }) => {
+  await ensureAdmin(page);
+  await loginAsAdmin(page);
+  await page.goto('/productos/nuevo');
+
+  const precio = page.locator('[name="precio"]');
+  await precio.fill('0');
+  await expect(precio).not.toBeValid();
+  await precio.fill('-1');
+  await expect(precio).not.toBeValid();
+  await precio.fill('abc');
+  await expect(precio).toHaveValue('');
+});
+
+test('stock y cantidad solo aceptan enteros positivos', async ({ page }) => {
+  await ensureAdmin(page);
+  await loginAsAdmin(page);
+  await page.goto('/productos/nuevo');
+
+  const stock = page.locator('[name="stock"]');
+  await stock.fill('0');
+  await expect(stock).not.toBeValid();
+  await stock.fill('-2');
+  await expect(stock).not.toBeValid();
+  await stock.fill('1.5');
+  await expect(stock).not.toBeValid();
 });
 
 test('flujo basico de producto crea y lista un registro', async ({ page }) => {

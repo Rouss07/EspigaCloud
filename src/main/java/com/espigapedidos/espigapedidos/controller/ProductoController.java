@@ -5,7 +5,9 @@ import com.espigapedidos.espigapedidos.form.ProductoForm;
 import com.espigapedidos.espigapedidos.service.ProductoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/productos")
@@ -30,7 +32,13 @@ public class ProductoController {
     }
 
     @PostMapping("/guardar")
-    public String guardarProducto(@ModelAttribute ProductoForm producto) {
+    public String guardarProductoValidado(@Valid @ModelAttribute("producto") ProductoForm producto,
+                                           BindingResult resultado) {
+        if (resultado.hasErrors()) return "productos/formulario";
+        return guardarProducto(producto);
+    }
+
+    public String guardarProducto(ProductoForm producto) {
         productoService.guardarProducto(producto.toEntity());
         return "redirect:/productos";
     }

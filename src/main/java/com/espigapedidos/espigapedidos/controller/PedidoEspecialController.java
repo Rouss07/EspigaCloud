@@ -7,8 +7,10 @@ import com.espigapedidos.espigapedidos.service.PedidoEspecialService;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.validation.Valid;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,9 +42,26 @@ public class PedidoEspecialController {
     }
 
     @PostMapping("/guardar")
-    public String guardarPedidoEspecial(@ModelAttribute PedidoEspecialForm pedidoEspecial,
-                                        @RequestParam("tiendaId") Long tiendaId,
-                                        @RequestParam("archivoImagen") MultipartFile archivoImagen) throws IOException {
+    public String guardarPedidoEspecialValidado(@Valid @ModelAttribute("pedidoEspecial") PedidoEspecialForm pedidoEspecial,
+                                        BindingResult resultado,
+                                        @RequestParam(value = "tiendaId", required = false) Long tiendaId,
+                                        @RequestParam("archivoImagen") MultipartFile archivoImagen,
+                                        Model model) throws IOException {
+        if (tiendaId == null) resultado.reject("tienda.required", "Seleccione una tienda");
+        if (!archivoImagen.isEmpty() && (archivoImagen.getContentType() == null ||
+                !archivoImagen.getContentType().startsWith("image/"))) {
+            resultado.reject("imagen.invalid", "El archivo debe ser una imagen");
+        }
+        if (resultado.hasErrors()) {
+            model.addAttribute("tiendas", tiendaService.listarTiendas());
+            return "pedidosespeciales/formulario";
+        }
+        return guardarPedidoEspecial(pedidoEspecial, tiendaId, archivoImagen);
+    }
+
+    public String guardarPedidoEspecial(PedidoEspecialForm pedidoEspecial,
+                                         Long tiendaId,
+                                         MultipartFile archivoImagen) throws IOException {
 
         Tienda tienda = tiendaService.obtenerTiendaPorId(tiendaId);
         PedidoEspecial pedidoEspecialEntidad = pedidoEspecial.toEntity();

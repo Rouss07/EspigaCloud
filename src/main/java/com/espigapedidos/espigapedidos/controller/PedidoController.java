@@ -7,7 +7,9 @@ import com.espigapedidos.espigapedidos.service.PedidoService;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -42,7 +44,19 @@ public class PedidoController {
     }
 
     @PostMapping("/guardar")
-    public String guardarPedido(@ModelAttribute PedidoForm pedido, @RequestParam("tienda") Long tiendaId) {
+    public String guardarPedidoValidado(@Valid @ModelAttribute("pedido") PedidoForm pedido,
+                                         BindingResult resultado,
+                                         @RequestParam(value = "tienda", required = false) Long tiendaId,
+                                         Model model) {
+        if (tiendaId == null) resultado.reject("tienda.required", "Seleccione una tienda");
+        if (resultado.hasErrors()) {
+            model.addAttribute("tiendas", tiendaService.listarTiendas());
+            return "pedidos/formulario";
+        }
+        return guardarPedido(pedido, tiendaId);
+    }
+
+    public String guardarPedido(PedidoForm pedido, Long tiendaId) {
         Tienda tienda = tiendaService.obtenerTiendaPorId(tiendaId);
         Pedido pedidoEntidad = pedido.toEntity();
         pedidoEntidad.setTienda(tienda);

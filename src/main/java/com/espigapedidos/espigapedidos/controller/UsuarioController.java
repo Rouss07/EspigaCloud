@@ -5,7 +5,9 @@ import com.espigapedidos.espigapedidos.form.UsuarioForm;
 import com.espigapedidos.espigapedidos.service.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/usuarios")
@@ -30,7 +32,13 @@ public class UsuarioController {
     }
 
     @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute UsuarioForm usuario) {
+    public String guardarUsuarioValidado(@Valid @ModelAttribute("usuario") UsuarioForm usuario,
+                                          BindingResult resultado) {
+        if (resultado.hasErrors()) return "usuarios/formulario";
+        return guardarUsuario(usuario);
+    }
+
+    public String guardarUsuario(UsuarioForm usuario) {
         usuarioService.guardarUsuario(usuario.toEntity());
         return "redirect:/usuarios";
     }

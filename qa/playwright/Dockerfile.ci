@@ -1,0 +1,7 @@
+FROM mcr.microsoft.com/playwright:v1.45.0-jammy
+
+WORKDIR /workspace
+COPY . .
+RUN npm init -y >/dev/null 2>&1 && npm install --no-save @playwright/test@1.45.0
+
+ENTRYPOINT ["npx", "playwright", "test", "qa/playwright", "--config=qa/playwright/playwright.config.js"]

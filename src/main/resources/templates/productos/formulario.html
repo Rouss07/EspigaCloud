@@ -16,25 +16,30 @@
 
   <form th:action="@{/productos/guardar}" th:object="${producto}" method="post">
     <input type="hidden" th:field="*{id}">
+    <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+      <div th:each="error : ${#fields.allErrors()}" th:text="${error}"></div>
+    </div>
 
     <div class="mb-3">
       <label class="form-label">Nombre</label>
-      <input type="text" th:field="*{nombre}" class="form-control" required>
+      <input type="text" th:field="*{nombre}" class="form-control" maxlength="100" required>
     </div>
 
     <div class="mb-3">
       <label class="form-label">Categoría</label>
-      <input type="text" th:field="*{categoria}" class="form-control" required>
+      <input type="text" th:field="*{categoria}" class="form-control" maxlength="60" required>
     </div>
 
     <div class="mb-3">
       <label class="form-label">Precio</label>
-      <input type="number" step="0.01" th:field="*{precio}" class="form-control" required>
+      <input type="number" min="0.01" step="0.01" th:field="*{precio}" class="form-control" required>
+      <div class="text-danger" th:errors="*{precio}"></div>
     </div>
 
     <div class="mb-3">
       <label class="form-label">Stock</label>
-      <input type="number" th:field="*{stock}" class="form-control" required>
+      <input type="number" min="1" step="1" th:field="*{stock}" class="form-control" required>
+      <div class="text-danger" th:errors="*{stock}"></div>
     </div>
 
     <button type="submit" class="btn btn-success">Guardar</button>
