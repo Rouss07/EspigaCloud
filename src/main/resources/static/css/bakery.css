@@ -1,0 +1,381 @@
+:root {
+  --bread-50: #fff8ec;
+  --bread-100: #f8ead2;
+  --bread-200: #efd4a8;
+  --bread-500: #c98538;
+  --bread-700: #86501f;
+  --cocoa-900: #2d1b12;
+  --cocoa-700: #5a3824;
+  --cream: #fffdf8;
+  --mint: #4f8f6a;
+  --berry: #b8473d;
+  --ink: #2f261f;
+  --muted: #796a5d;
+  --line: #eadbc5;
+  --shadow: 0 18px 45px rgba(90, 56, 36, 0.12);
+}
+
+* {
+  letter-spacing: 0;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(239, 212, 168, 0.42), transparent 32rem),
+    linear-gradient(180deg, var(--bread-50) 0%, #fffaf1 48%, #f7ecdc 100%);
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+a {
+  color: var(--bread-700);
+}
+
+.bakery-navbar {
+  background: linear-gradient(90deg, var(--cocoa-900), var(--bread-700));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bakery-navbar .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #fff8ec;
+}
+
+.brand-mark {
+  display: inline-grid;
+  width: 2.3rem;
+  height: 2.3rem;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f7c46d, #d9953f);
+  color: var(--cocoa-900);
+  font-weight: 800;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+
+.brand-text {
+  line-height: 1.05;
+}
+
+.brand-text small {
+  display: block;
+  color: rgba(255, 248, 236, 0.72);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.bakery-navbar .nav-link {
+  border-radius: 999px;
+  color: rgba(255, 248, 236, 0.82);
+  font-weight: 600;
+  margin: 0 0.12rem;
+  padding-inline: 0.85rem;
+}
+
+.bakery-navbar .nav-link:hover,
+.bakery-navbar .nav-link:focus {
+  background: rgba(255, 248, 236, 0.14);
+  color: #ffffff;
+}
+
+.page-shell {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.container.py-4 {
+  padding-bottom: 3rem !important;
+  padding-top: 2rem !important;
+}
+
+.container.py-4 > h1 {
+  color: var(--cocoa-900);
+  font-size: clamp(1.55rem, 3vw, 2.25rem);
+  font-weight: 850;
+  margin-bottom: 1.25rem;
+}
+
+.container.py-4 > h1::before {
+  display: block;
+  color: var(--bread-700);
+  content: "Espiga de Trigo";
+  font-size: 0.78rem;
+  font-weight: 850;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.page-kicker {
+  color: var(--bread-700);
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.page-title {
+  color: var(--cocoa-900);
+  font-size: clamp(1.55rem, 3vw, 2.4rem);
+  font-weight: 850;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--muted);
+  margin: 0.45rem 0 0;
+}
+
+.bakery-panel,
+.card {
+  background: rgba(255, 253, 248, 0.94);
+  border: 1px solid rgba(234, 219, 197, 0.92) !important;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+}
+
+.bakery-panel {
+  padding: 1.25rem;
+}
+
+.container.py-4 > form {
+  background: rgba(255, 253, 248, 0.94);
+  border: 1px solid rgba(234, 219, 197, 0.92);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  max-width: 52rem;
+  padding: 1.25rem;
+}
+
+.dashboard-hero {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  padding: clamp(1.35rem, 4vw, 2.6rem);
+}
+
+.dashboard-hero::after {
+  position: absolute;
+  right: 2rem;
+  bottom: -1.5rem;
+  color: rgba(201, 133, 56, 0.12);
+  content: "ESPIGA";
+  font-size: clamp(4rem, 14vw, 8rem);
+  font-weight: 900;
+}
+
+.metric-card .card-body {
+  min-height: 10.5rem;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.metric-value {
+  color: var(--bread-700);
+  font-size: 2.35rem;
+  font-weight: 900;
+}
+
+.module-icon {
+  display: inline-grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 0.55rem;
+  background: var(--bread-100);
+  color: var(--bread-700);
+  font-weight: 900;
+}
+
+.table {
+  background: var(--cream);
+  margin-bottom: 0;
+}
+
+.container.py-4 > .table,
+.container.py-4 > table,
+.container.py-4 table.table {
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.table thead th {
+  background: #f5ead9;
+  border-bottom-color: var(--line);
+  color: var(--cocoa-900);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.table td,
+.table th {
+  border-color: var(--line);
+  vertical-align: middle;
+}
+
+.table td:last-child {
+  min-width: 11rem;
+}
+
+.container.py-4 > p {
+  color: var(--muted);
+  margin-bottom: 0.45rem;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-bg-type: rgba(255, 248, 236, 0.62);
+}
+
+.form-control,
+.form-select {
+  border-color: #dfc7a6;
+  border-radius: 0.5rem;
+  color: var(--ink);
+  min-height: 2.7rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--bread-500);
+  box-shadow: 0 0 0 0.2rem rgba(201, 133, 56, 0.18);
+}
+
+.form-label {
+  color: var(--cocoa-700);
+  font-weight: 750;
+}
+
+.btn {
+  border-radius: 999px;
+  font-weight: 750;
+}
+
+.btn-primary,
+.btn-success,
+.btn-dark {
+  background: linear-gradient(135deg, var(--bread-700), var(--bread-500));
+  border-color: var(--bread-700);
+  color: #fffaf1;
+}
+
+.btn-primary:hover,
+.btn-success:hover,
+.btn-dark:hover {
+  background: linear-gradient(135deg, var(--cocoa-900), var(--bread-700));
+  border-color: var(--cocoa-900);
+}
+
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-warning,
+.btn-outline-danger {
+  border-color: var(--bread-500);
+  color: var(--bread-700);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-success:hover,
+.btn-outline-warning:hover,
+.btn-outline-danger:hover {
+  background: var(--bread-700);
+  border-color: var(--bread-700);
+  color: #fffaf1;
+}
+
+.btn-warning {
+  background: #f2be64;
+  border-color: #d99a3f;
+  color: var(--cocoa-900);
+}
+
+.btn-danger {
+  background: var(--berry);
+  border-color: var(--berry);
+}
+
+.btn-info {
+  background: var(--mint);
+  border-color: var(--mint);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #7e6a58;
+  border-color: #7e6a58;
+}
+
+.login-page {
+  min-height: 100vh;
+  background:
+    linear-gradient(rgba(45, 27, 18, 0.5), rgba(45, 27, 18, 0.34)),
+    url("https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1600&q=80") center/cover fixed;
+}
+
+.login-card {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 253, 248, 0.94);
+}
+
+.login-brand {
+  color: var(--cocoa-900);
+  font-weight: 900;
+}
+
+.login-note {
+  color: var(--muted);
+}
+
+.bakery-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bread-50);
+  color: var(--bread-700);
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0.35rem 0.75rem;
+}
+
+.img-thumbnail {
+  border-color: var(--line);
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .bakery-panel {
+    padding: 1rem;
+  }
+
+  .table-responsive {
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+  }
+
+  table.table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

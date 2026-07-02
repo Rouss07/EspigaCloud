@@ -2,9 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bakery-navbar shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" th:href="@{/}">EspigaPedidos</a>
+        <a class="navbar-brand fw-bold" th:href="@{/}">
+            <span class="brand-mark">E</span>
+            <span class="brand-text">
+                EspigaPedidos
+                <small>Panaderia artesanal</small>
+            </span>
+        </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
             <span class="navbar-toggler-icon"></span>
@@ -33,7 +39,7 @@
 
                 <li class="nav-item">
                     <form th:action="@{/logout}" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-outline-warning btn-sm ms-2">Cerrar sesión</button>
+                        <button type="submit" class="btn btn-outline-warning btn-sm ms-2">Cerrar sesion</button>
                     </form>
                 </li>
             </ul>
