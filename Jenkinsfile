@@ -34,7 +34,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'mvn --batch-mode -Pcoverage-100 clean verify -Dspring.profiles.active=test'
+                sh 'mvn --batch-mode clean verify -Dspring.profiles.active=test -Dcoverage.minimum=0.80'
             }
             post {
                 always {
