@@ -45,11 +45,14 @@ test('producto rechaza precio cero, negativo y letras', async ({ page }) => {
 
   const precio = page.locator('[name="precio"]');
   await precio.fill('0');
-  await expect(precio).not.toBeValid();
+  expect(await precio.evaluate((input) => input.checkValidity())).toBe(false);
   await precio.fill('-1');
-  await expect(precio).not.toBeValid();
-  await precio.fill('abc');
-  await expect(precio).toHaveValue('');
+  expect(await precio.evaluate((input) => input.checkValidity())).toBe(false);
+  const valorConLetras = await precio.evaluate((input) => {
+    input.value = 'abc';
+    return input.value;
+  });
+  expect(valorConLetras).toBe('');
 });
 
 test('stock y cantidad solo aceptan enteros positivos', async ({ page }) => {
@@ -59,11 +62,11 @@ test('stock y cantidad solo aceptan enteros positivos', async ({ page }) => {
 
   const stock = page.locator('[name="stock"]');
   await stock.fill('0');
-  await expect(stock).not.toBeValid();
+  expect(await stock.evaluate((input) => input.checkValidity())).toBe(false);
   await stock.fill('-2');
-  await expect(stock).not.toBeValid();
+  expect(await stock.evaluate((input) => input.checkValidity())).toBe(false);
   await stock.fill('1.5');
-  await expect(stock).not.toBeValid();
+  expect(await stock.evaluate((input) => input.checkValidity())).toBe(false);
 });
 
 test('flujo basico de producto crea y lista un registro', async ({ page }) => {
