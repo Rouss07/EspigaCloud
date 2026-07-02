@@ -7,6 +7,7 @@ const LOGIN_URL = `${BASE_URL}/login`;
 const PEDIDOS_ESPECIALES_URL = `${BASE_URL}/pedidos-especiales`;
 const ADMIN_PASSWORD = __ENV.ADMIN_PASSWORD || '1234';
 const TIENDA_ID = __ENV.TIENDA_ID || '1';
+const CLIENTES = ['Ana Torres', 'Luis Ramos', 'Maria Flores', 'Carlos Vega', 'Rosa Medina'];
 
 const requestDuration = new Trend('request_duration');
 const successRate = new Rate('success_rate');
@@ -105,6 +106,15 @@ export default function () {
 
             const formCsrfMatch = formRes.body.match(/name="_csrf"[^>]*value="([^"]+)"/);
             const formCsrf = formCsrfMatch ? formCsrfMatch[1] : csrfToken;
+            const tiendaOptions = formRes.body.match(/<option[^>]*value="(\d+)"[^>]*>/g);
+            let tiendaId = TIENDA_ID;
+
+            if (tiendaOptions) {
+                const firstOption = tiendaOptions[0].match(/value="(\d+)"/);
+                if (firstOption) {
+                    tiendaId = firstOption[1];
+                }
+            }
 
             const uniqueId = `${__VU}_${__ITER}_${Date.now()}`;
             const sabores = ['Vainilla', 'Chocolate', 'Fresa'];
@@ -112,14 +122,14 @@ export default function () {
             const boundary = '----Boundary' + Math.random().toString(36).substring(2);
 
             const fields = {
-                cliente: `Cliente ${uniqueId}`,
+                cliente: CLIENTES[Math.floor(Math.random() * CLIENTES.length)],
                 telefono: `999${Math.floor(Math.random() * 900000 + 100000)}`,
                 descripcion: `Pedido smoke ${uniqueId}`,
                 sabor: sabores[Math.floor(Math.random() * sabores.length)],
                 tamano: tamanos[Math.floor(Math.random() * tamanos.length)],
                 fechaEntrega: '2026-12-31',
                 estado: 'PENDIENTE',
-                tiendaId: TIENDA_ID,
+                tiendaId: tiendaId,
                 _csrf: formCsrf
             };
 
@@ -130,6 +140,7 @@ export default function () {
                     'Content-Type': `multipart/form-data; boundary=${boundary}`,
                     'Cookie': `JSESSIONID=${authCookie}`
                 },
+                redirects: 0,
                 tags: { name: 'POST_create' }
             });
 

@@ -6,6 +6,7 @@ const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
 const LOGIN_URL = `${BASE_URL}/login`;
 const PEDIDOS_ESPECIALES_URL = `${BASE_URL}/pedidos-especiales`;
 const ADMIN_PASSWORD = __ENV.ADMIN_PASSWORD || '1234';
+const CLIENTES = ['Ana Torres', 'Luis Ramos', 'Maria Flores', 'Carlos Vega', 'Rosa Medina'];
 
 const requestDuration = new Trend('request_duration', true);
 const createSuccess = new Counter('create_success');
@@ -142,7 +143,7 @@ export default function (data) {
         const boundary = '----Boundary' + Math.random().toString(36).substring(2);
 
         const fields = {
-            cliente: `Cliente Test ${uniqueId}`,
+            cliente: CLIENTES[Math.floor(Math.random() * CLIENTES.length)],
             telefono: '999888777',
             descripcion: `Pedido especial ${uniqueId}`,
             sabor: 'Vainilla',
