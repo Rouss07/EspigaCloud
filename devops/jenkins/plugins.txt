@@ -1,0 +1,15 @@
+configuration-as-code
+coverage
+credentials-binding
+docker-workflow
+git
+github
+github-branch-source
+job-dsl
+junit
+maven-plugin
+nodejs
+pipeline-stage-view
+sonar
+workflow-aggregator
+ws-cleanup

@@ -1,0 +1,45 @@
+jenkins:
+  systemMessage: "EspigaCloud CI/CD administrado como código"
+  numExecutors: 2
+  mode: NORMAL
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${JENKINS_ADMIN_ID}"
+          name: "Rosa"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything: { allowAnonymousRead: false }
+  globalNodeProperties:
+    - envVars:
+        env:
+          - { key: "JAVA17_HOME", value: "/opt/jdk17" }
+tool:
+  git:
+    installations: [{ name: "Default", home: "git" }]
+  jdk:
+    installations: [{ name: "JDK17", home: "/opt/jdk17" }]
+  maven:
+    installations: [{ name: "Maven3", home: "/usr/share/maven" }]
+unclassified:
+  location: { url: "http://localhost:8080/" }
+  sonarGlobalConfiguration:
+    buildWrapperEnabled: true
+    installations:
+      - name: "SonarQube"
+        serverUrl: "http://sonarqube:9000"
+        credentialsId: "sonarqube-token"
+        triggers: { skipScmCause: false, skipUpstreamCause: false }
+jobs:
+  - script: >
+      pipelineJob('EspigaCloud') {
+        description('Pipeline declarativo cargado desde GitHub')
+        definition {
+          cpsScm {
+            scm { git { remote { url('https://github.com/Rouss07/EspigaCloud.git') }; branches('*/main') } }
+            scriptPath('Jenkinsfile')
+          }
+        }
+        triggers { scm('H/5 * * * *') }
+      }

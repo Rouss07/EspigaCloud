@@ -1,67 +1,32 @@
 pipeline {
     agent any
-
-    tools {
-        maven 'Maven3'
-        jdk 'JDK17'
-    }
-
-    environment {
-        SONAR_PROJECT_KEY = 'com.espigapedidos:espigapedidos'
-        DOCKER_IMAGE = 'espigapedidos'
-        ADMIN_PASSWORD = credentials('admin-password')
-        TIENDA_PASSWORD = credentials('tienda-password')
-    }
-
+    tools { jdk 'JDK17'; maven 'Maven3' }
+    environment { SONAR_PROJECT_KEY = 'com.espigapedidos:espigapedidos' }
     stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
+        stage('Checkout') { steps { checkout scm } }
+        stage('Compile') { steps { sh 'mvn --batch-mode clean compile' } }
+        stage('Test and Coverage') {
+            steps { sh 'mvn --batch-mode verify -Dspring.profiles.active=test' }
+            post { always {
+                junit allowEmptyResults: false, testResults: 'target/surefire-reports/*.xml'
+                recordCoverage tools: [[parser: 'JACOCO', pattern: 'target/site/jacoco/jacoco.xml']]
+            } }
         }
-
-        stage('Build') {
-            steps {
-                sh 'mvn clean package -DskipTests'
-            }
-        }
-
-        stage('Tests') {
-            steps {
-                sh 'mvn test -Dspring.profiles.active=test'
-            }
-        }
-
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
+            steps { withSonarQubeEnv('SonarQube') {
+                sh 'mvn --batch-mode sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml'
+            } }
         }
-
-        stage('Docker Build') {
-            steps {
-                sh "DOCKER_BUILDKIT=0 docker build -t ${DOCKER_IMAGE} ."
-            }
+        stage('Quality Gate') {
+            steps { timeout(time: 10, unit: 'MINUTES') { waitForQualityGate abortPipeline: true } }
         }
-
-        stage('Docker Run') {
-            steps {
-                sh "docker stop ${DOCKER_IMAGE} || true"
-                sh "docker rm ${DOCKER_IMAGE} || true"
-                sh "docker run -d --name ${DOCKER_IMAGE} -p 8085:8080 -e ADMIN_PASSWORD=${ADMIN_PASSWORD} -e TIENDA_PASSWORD=${TIENDA_PASSWORD} ${DOCKER_IMAGE}"
-            }
+        stage('Archive') {
+            steps { archiveArtifacts artifacts: 'target/*.jar,target/site/jacoco/**', fingerprint: true }
         }
     }
-
     post {
-        success {
-            echo 'Pipeline ejecutado exitosamente'
-        }
-        failure {
-            echo 'Pipeline falló'
-        }
+        always { cleanWs deleteDirs: true }
+        success { echo 'Pipeline ejecutado exitosamente' }
+        failure { echo 'Pipeline falló; revise las etapas y reportes publicados.' }
     }
 }
