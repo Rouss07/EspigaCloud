@@ -90,7 +90,28 @@ pipeline {
             when { expression { return params.RUN_SONAR } }
             steps {
                 timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                    script {
+                        def qualityGate = waitForQualityGate abortPipeline: true
+                        def generatedAt = sh(script: "date -u +%Y-%m-%dT%H:%M:%SZ", returnStdout: true).trim()
+
+                        sh 'mkdir -p target'
+                        writeFile(
+                            file: 'target/sonar-quality-gate.json',
+                            text: """{
+  "projectKey": "${env.SONAR_PROJECT_KEY}",
+  "status": "${qualityGate.status}",
+  "buildNumber": "${env.BUILD_NUMBER}",
+  "buildUrl": "${env.BUILD_URL}",
+  "generatedAt": "${generatedAt}"
+}
+"""
+                        )
+                    }
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'target/sonar-quality-gate.json'
                 }
             }
         }
