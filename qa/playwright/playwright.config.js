@@ -6,8 +6,8 @@ module.exports = defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [
     ['list'],
-    ['junit', { outputFile: 'target/playwright/results.xml' }],
-    ['html', { outputFolder: 'target/playwright/html-report', open: 'never' }]
+    ['junit', { outputFile: '../../target/playwright/results.xml' }],
+    ['html', { outputFolder: '../../target/playwright/html-report', open: 'never' }]
   ],
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:8085',

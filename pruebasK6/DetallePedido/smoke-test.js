@@ -38,8 +38,58 @@ export function setup() {
         ? loginRes.headers['Set-Cookie'].match(/JSESSIONID=([^;]+)/)[1]
         : jsessionid;
 
+    const sessionCookie = `JSESSIONID=${authCookie}`;
+    const formHeaders = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': sessionCookie
+    };
+
+    const obtenerCsrf = (ruta) => {
+        const response = http.get(`${BASE_URL}${ruta}`, {
+            headers: { 'Cookie': sessionCookie }
+        });
+        const match = response.body.match(/name="_csrf"[^>]*value="([^"]+)"/);
+        return { response, token: match ? match[1] : null };
+    };
+
+    // El entorno CI usa una base temporal; crear las relaciones que requiere el detalle.
+    const tiendaForm = obtenerCsrf('/tiendas/nuevo');
+    if (tiendaForm.response.status !== 200 || !tiendaForm.token) {
+        return { authenticated: false };
+    }
+    http.post(`${BASE_URL}/tiendas/guardar`, {
+        nombre: 'Tienda K6',
+        direccion: 'Av. Pruebas 123',
+        telefono: '999888777',
+        estado: 'Activo',
+        _csrf: tiendaForm.token
+    }, { headers: formHeaders, redirects: 0 });
+
+    const productoForm = obtenerCsrf('/productos/nuevo');
+    if (productoForm.response.status !== 200 || !productoForm.token) {
+        return { authenticated: false };
+    }
+    http.post(`${BASE_URL}/productos/guardar`, {
+        nombre: 'Producto K6',
+        categoria: 'Pruebas',
+        precio: '5.50',
+        stock: '10000',
+        _csrf: productoForm.token
+    }, { headers: formHeaders, redirects: 0 });
+
+    const pedidoForm = obtenerCsrf('/pedidos/nuevo');
+    if (pedidoForm.response.status !== 200 || !pedidoForm.token) {
+        return { authenticated: false };
+    }
+    http.post(`${BASE_URL}/pedidos/guardar`, {
+        fecha: new Date().toISOString().slice(0, 10),
+        estado: 'Pendiente',
+        tienda: '1',
+        _csrf: pedidoForm.token
+    }, { headers: formHeaders, redirects: 0 });
+
     return {
-        sessionCookie: `JSESSIONID=${authCookie}`,
+        sessionCookie,
         authenticated: true
     };
 }
