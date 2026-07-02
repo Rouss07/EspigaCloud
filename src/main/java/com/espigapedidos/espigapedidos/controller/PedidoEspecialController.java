@@ -2,6 +2,7 @@ package com.espigapedidos.espigapedidos.controller;
 
 import com.espigapedidos.espigapedidos.entity.PedidoEspecial;
 import com.espigapedidos.espigapedidos.entity.Tienda;
+import com.espigapedidos.espigapedidos.form.PedidoEspecialForm;
 import com.espigapedidos.espigapedidos.service.PedidoEspecialService;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.springframework.stereotype.Controller;
@@ -33,18 +34,19 @@ public class PedidoEspecialController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        model.addAttribute("pedidoEspecial", new PedidoEspecial());
+        model.addAttribute("pedidoEspecial", new PedidoEspecialForm());
         model.addAttribute("tiendas", tiendaService.listarTiendas());
         return "pedidosespeciales/formulario";
     }
 
     @PostMapping("/guardar")
-    public String guardarPedidoEspecial(@ModelAttribute PedidoEspecial pedidoEspecial,
+    public String guardarPedidoEspecial(@ModelAttribute PedidoEspecialForm pedidoEspecial,
                                         @RequestParam("tiendaId") Long tiendaId,
                                         @RequestParam("archivoImagen") MultipartFile archivoImagen) throws IOException {
 
         Tienda tienda = tiendaService.obtenerTiendaPorId(tiendaId);
-        pedidoEspecial.setTienda(tienda);
+        PedidoEspecial pedidoEspecialEntidad = pedidoEspecial.toEntity();
+        pedidoEspecialEntidad.setTienda(tienda);
 
         if (!archivoImagen.isEmpty()) {
             String carpetaUploads = System.getProperty("user.dir") + "/uploads/";
@@ -57,10 +59,10 @@ public class PedidoEspecialController {
             File destino = new File(carpetaUploads + nombreArchivo);
             archivoImagen.transferTo(destino);
 
-            pedidoEspecial.setImagen(nombreArchivo);
+            pedidoEspecialEntidad.setImagen(nombreArchivo);
         }
 
-        pedidoEspecialService.guardarPedidoEspecial(pedidoEspecial);
+        pedidoEspecialService.guardarPedidoEspecial(pedidoEspecialEntidad);
         return "redirect:/pedidos-especiales";
     }
 

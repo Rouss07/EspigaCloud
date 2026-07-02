@@ -7,14 +7,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 @RestController
 public class SetupController {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Function<String, String> envProvider;
+    private final UnaryOperator<String> envProvider;
 
     @Autowired
     public SetupController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
@@ -22,7 +22,7 @@ public class SetupController {
     }
 
     SetupController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
-                    Function<String, String> envProvider) {
+                    UnaryOperator<String> envProvider) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.envProvider = envProvider;

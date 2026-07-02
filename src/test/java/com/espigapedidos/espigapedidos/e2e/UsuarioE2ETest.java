@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DockerOnlyE2E
-public class UsuarioE2ETest {
+class UsuarioE2ETest {
 
     @LocalServerPort
     private int port;
@@ -125,7 +125,7 @@ public class UsuarioE2ETest {
 
         wait.until(ExpectedConditions.urlContains("/usuarios"));
 
-        wait.until(driver -> driver.getPageSource().contains(usernameUnico));
+        wait.until(navegador -> driver.getPageSource().contains(usernameUnico));
         assertTrue(driver.getPageSource().contains(usernameUnico));
     }
 

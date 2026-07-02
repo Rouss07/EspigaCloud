@@ -17,11 +17,12 @@ import java.time.Duration;
 
 import com.espigapedidos.espigapedidos.repository.UsuarioRepository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DockerOnlyE2E
-public class LoginE2ETest {
+class LoginE2ETest {
 
     @LocalServerPort
     private int port;
@@ -64,7 +65,7 @@ public class LoginE2ETest {
 
         // Tras login correcto, redirige a la pagina principal (dashboard)
         String url = driver.getCurrentUrl();
-        assertTrue(url.equals(appUrl + "/"),
+        assertEquals(appUrl + "/", url,
                 "Se esperaba redireccion a la pagina principal, pero la URL fue: " + url);
 
         assertTrue(driver.getPageSource().contains("Dashboard"),

@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @Transactional
 class DetallePedidoServiceIntegrationTest {
+
+    private static final LocalDate FECHA_PEDIDO = LocalDate.of(2026, Month.JULY, 1);
+    private static final LocalDate FECHA_PEDIDO_SIN_DETALLES = LocalDate.of(2026, Month.JULY, 2);
 
     @Autowired
     private DetallePedidoService detallePedidoService;
@@ -42,7 +46,7 @@ class DetallePedidoServiceIntegrationTest {
         tienda = tiendaService.guardarTienda(tienda);
 
         pedido = new Pedido();
-        pedido.setFecha(LocalDate.now());
+        pedido.setFecha(FECHA_PEDIDO);
         pedido.setEstado("pendiente");
         pedido.setTienda(tienda);
         pedido = pedidoService.guardarPedido(pedido);
@@ -96,7 +100,7 @@ class DetallePedidoServiceIntegrationTest {
     @Test
     void listarPorPedidoSinDetalles_retornaListaVacia() {
         // New pedido with no detalles
-        Pedido pedidoNuevo = new Pedido(null, LocalDate.now(), "pendiente", pedido.getTienda());
+        Pedido pedidoNuevo = new Pedido(null, FECHA_PEDIDO_SIN_DETALLES, "pendiente", pedido.getTienda());
         pedidoNuevo = pedidoService.guardarPedido(pedidoNuevo);
 
         List<DetallePedido> detalles = detallePedidoService.listarPorPedido(pedidoNuevo.getId());

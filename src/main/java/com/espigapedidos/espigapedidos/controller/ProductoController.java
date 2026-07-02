@@ -1,6 +1,7 @@
 package com.espigapedidos.espigapedidos.controller;
 
 import com.espigapedidos.espigapedidos.entity.Producto;
+import com.espigapedidos.espigapedidos.form.ProductoForm;
 import com.espigapedidos.espigapedidos.service.ProductoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,20 +25,20 @@ public class ProductoController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        model.addAttribute("producto", new Producto());
+        model.addAttribute("producto", new ProductoForm());
         return "productos/formulario";
     }
 
     @PostMapping("/guardar")
-    public String guardarProducto(@ModelAttribute Producto producto) {
-        productoService.guardarProducto(producto);
+    public String guardarProducto(@ModelAttribute ProductoForm producto) {
+        productoService.guardarProducto(producto.toEntity());
         return "redirect:/productos";
     }
 
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Producto producto = productoService.obtenerProductoPorId(id);
-        model.addAttribute("producto", producto);
+        model.addAttribute("producto", ProductoForm.fromEntity(producto));
         return "productos/formulario";
     }
 

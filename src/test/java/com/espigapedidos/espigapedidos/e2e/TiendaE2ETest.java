@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DockerOnlyE2E
-public class TiendaE2ETest {
+class TiendaE2ETest {
 
     @LocalServerPort
     private int port;
@@ -101,7 +101,7 @@ public class TiendaE2ETest {
         driver.findElement(BOTON_GUARDAR).click();
 
         wait.until(ExpectedConditions.urlContains("/tiendas"));
-        wait.until(driver -> driver.getPageSource().contains(nombreUnico));
+        wait.until(navegador -> driver.getPageSource().contains(nombreUnico));
 
         assertTrue(driver.getCurrentUrl().contains("/tiendas"));
         assertTrue(driver.getPageSource().contains(nombreUnico),
@@ -122,7 +122,7 @@ public class TiendaE2ETest {
         driver.findElement(BOTON_GUARDAR).click();
 
         wait.until(ExpectedConditions.urlContains("/tiendas"));
-        wait.until(driver -> driver.getPageSource().contains(nombreOriginal));
+        wait.until(navegador -> driver.getPageSource().contains(nombreOriginal));
         assertTrue(driver.getPageSource().contains(nombreOriginal));
 
         List<WebElement> editarLinks = driver.findElements(By.cssSelector("a[href*='/tiendas/editar/']"));
@@ -138,7 +138,7 @@ public class TiendaE2ETest {
 
         driver.findElement(BOTON_GUARDAR).click();
         wait.until(ExpectedConditions.urlContains("/tiendas"));
-        wait.until(driver -> driver.getPageSource().contains(nombreEditado));
+        wait.until(navegador -> driver.getPageSource().contains(nombreEditado));
 
         assertTrue(driver.getPageSource().contains(nombreEditado),
                 "Se esperaba ver la tienda con el nombre editado");
@@ -158,7 +158,7 @@ public class TiendaE2ETest {
         driver.findElement(BOTON_GUARDAR).click();
 
         wait.until(ExpectedConditions.urlContains("/tiendas"));
-        wait.until(driver -> driver.getPageSource().contains(nombreEliminar));
+        wait.until(navegador -> driver.getPageSource().contains(nombreEliminar));
         assertTrue(driver.getPageSource().contains(nombreEliminar));
 
         List<WebElement> eliminarLinks = driver.findElements(By.cssSelector("a[href*='/tiendas/eliminar/']"));

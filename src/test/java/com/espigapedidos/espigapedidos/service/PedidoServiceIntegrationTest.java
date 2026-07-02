@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @Transactional
 class PedidoServiceIntegrationTest {
+
+    private static final LocalDate FECHA_GUARDAR = LocalDate.of(2025, Month.JUNE, 1);
+    private static final LocalDate FECHA_LISTAR = LocalDate.of(2026, Month.JULY, 1);
+    private static final LocalDate FECHA_ELIMINAR = LocalDate.of(2026, Month.JULY, 2);
+    private static final LocalDate FECHA_CONTAR = LocalDate.of(2026, Month.JULY, 3);
 
     @Autowired
     private PedidoService pedidoService;
@@ -40,7 +46,7 @@ class PedidoServiceIntegrationTest {
     @Test
     void guardarYBuscarPedido() {
         Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDate.of(2025, 6, 1));
+        pedido.setFecha(FECHA_GUARDAR);
         pedido.setEstado("pendiente");
         pedido.setTienda(tienda);
 
@@ -55,7 +61,7 @@ class PedidoServiceIntegrationTest {
     @Test
     void listarPedidos_debeIncluirPedidoGuardado() {
         Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDate.now());
+        pedido.setFecha(FECHA_LISTAR);
         pedido.setEstado("entregado");
         pedido.setTienda(tienda);
         pedidoService.guardarPedido(pedido);
@@ -68,7 +74,7 @@ class PedidoServiceIntegrationTest {
     @Test
     void eliminarPedido_debeRetornarNullAlBuscar() {
         Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDate.now());
+        pedido.setFecha(FECHA_ELIMINAR);
         pedido.setEstado("cancelado");
         pedido.setTienda(tienda);
         Pedido guardado = pedidoService.guardarPedido(pedido);
@@ -82,7 +88,7 @@ class PedidoServiceIntegrationTest {
     void contarPedidos_aumentaDespuesDeGuardar() {
         long antes = pedidoService.contarPedidos();
 
-        pedidoService.guardarPedido(new Pedido(null, LocalDate.now(), "pendiente", tienda));
+        pedidoService.guardarPedido(new Pedido(null, FECHA_CONTAR, "pendiente", tienda));
 
         assertEquals(antes + 1, pedidoService.contarPedidos());
     }

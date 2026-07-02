@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @Transactional
 class PedidoEspecialServiceIntegrationTest {
+
+    private static final LocalDate FECHA_ENTREGA = LocalDate.of(2026, Month.JULY, 4);
 
     @Autowired
     private PedidoEspecialService pedidoEspecialService;
@@ -40,7 +43,7 @@ class PedidoEspecialServiceIntegrationTest {
         pe.setDescripcion("Torta personalizada");
         pe.setSabor("Chocolate");
         pe.setTamano("Grande");
-        pe.setFechaEntrega(LocalDate.now().plusDays(3));
+        pe.setFechaEntrega(FECHA_ENTREGA);
         pe.setEstado("pendiente");
         pe.setTienda(tienda);
         return pe;

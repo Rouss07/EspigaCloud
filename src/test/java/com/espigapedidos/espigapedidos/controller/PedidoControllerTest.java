@@ -2,6 +2,7 @@ package com.espigapedidos.espigapedidos.controller;
 
 import com.espigapedidos.espigapedidos.entity.Pedido;
 import com.espigapedidos.espigapedidos.entity.Tienda;
+import com.espigapedidos.espigapedidos.form.PedidoForm;
 import com.espigapedidos.espigapedidos.service.PedidoService;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class PedidoControllerTest {
         String vista = controller.mostrarFormularioNuevo(model);
 
         assertEquals("pedidos/formulario", vista);
-        verify(model).addAttribute(eq("pedido"), any(Pedido.class));
+        verify(model).addAttribute(eq("pedido"), any(PedidoForm.class));
         verify(model).addAttribute("tiendas", List.of(tienda));
         verify(tiendaService).listarTiendas();
     }
@@ -60,22 +61,22 @@ class PedidoControllerTest {
         PedidoService pedidoService = mock(PedidoService.class);
         TiendaService tiendaService = mock(TiendaService.class);
 
-        Pedido pedido = new Pedido();
+        PedidoForm pedido = new PedidoForm();
+        pedido.setEstado("PENDIENTE");
 
         Tienda tienda = new Tienda();
         tienda.setNombre("Tienda Puno");
 
         when(tiendaService.obtenerTiendaPorId(1L)).thenReturn(tienda);
-        when(pedidoService.guardarPedido(pedido)).thenReturn(pedido);
 
         PedidoController controller = new PedidoController(pedidoService, tiendaService);
 
         String vista = controller.guardarPedido(pedido, 1L);
 
         assertEquals("redirect:/pedidos", vista);
-        assertEquals(tienda, pedido.getTienda());
         verify(tiendaService).obtenerTiendaPorId(1L);
-        verify(pedidoService).guardarPedido(pedido);
+        verify(pedidoService).guardarPedido(argThat(guardado ->
+                "PENDIENTE".equals(guardado.getEstado()) && guardado.getTienda() == tienda));
     }
 
     @Test
@@ -98,7 +99,7 @@ class PedidoControllerTest {
         String vista = controller.mostrarFormularioEditar(1L, model);
 
         assertEquals("pedidos/formulario", vista);
-        verify(model).addAttribute("pedido", pedido);
+        verify(model).addAttribute(eq("pedido"), any(PedidoForm.class));
         verify(model).addAttribute("tiendas", List.of(tienda));
         verify(pedidoService).obtenerPedidoPorId(1L);
         verify(tiendaService).listarTiendas();

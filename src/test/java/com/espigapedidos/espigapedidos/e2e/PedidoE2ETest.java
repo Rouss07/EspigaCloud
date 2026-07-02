@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DockerOnlyE2E
-public class PedidoE2ETest {
+class PedidoE2ETest {
 
     @LocalServerPort
     private int port;

@@ -3,10 +3,13 @@ package com.espigapedidos.espigapedidos.entity;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PedidoTest {
+
+    private static final LocalDate FECHA_PEDIDO = LocalDate.of(2026, Month.JULY, 1);
 
     @Test
     void crearPedidoCompleto() {
@@ -15,7 +18,7 @@ class PedidoTest {
         tienda.setNombre("Tienda Central");
 
         Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDate.now());
+        pedido.setFecha(FECHA_PEDIDO);
         pedido.setEstado("PENDIENTE");
         pedido.setTienda(tienda);
 

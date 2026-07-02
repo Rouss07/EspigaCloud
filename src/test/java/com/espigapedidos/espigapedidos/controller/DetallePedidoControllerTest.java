@@ -3,6 +3,7 @@ package com.espigapedidos.espigapedidos.controller;
 import com.espigapedidos.espigapedidos.entity.DetallePedido;
 import com.espigapedidos.espigapedidos.entity.Pedido;
 import com.espigapedidos.espigapedidos.entity.Producto;
+import com.espigapedidos.espigapedidos.form.DetallePedidoForm;
 import com.espigapedidos.espigapedidos.service.DetallePedidoService;
 import com.espigapedidos.espigapedidos.service.PedidoService;
 import com.espigapedidos.espigapedidos.service.ProductoService;
@@ -74,7 +75,7 @@ class DetallePedidoControllerTest {
         assertEquals("detallepedido/formulario", vista);
 
         verify(model).addAttribute("pedido", pedido);
-        verify(model).addAttribute(eq("detallePedido"), any(DetallePedido.class));
+        verify(model).addAttribute(eq("detallePedido"), any(DetallePedidoForm.class));
     }
 
     @Test
@@ -86,7 +87,8 @@ class DetallePedidoControllerTest {
 
         Pedido pedido = new Pedido();
         Producto producto = new Producto();
-        DetallePedido detalle = new DetallePedido();
+        DetallePedidoForm detalle = new DetallePedidoForm();
+        detalle.setCantidad(2);
 
         when(pedidoService.obtenerPedidoPorId(1L))
                 .thenReturn(pedido);
@@ -109,7 +111,10 @@ class DetallePedidoControllerTest {
                 "redirect:/detalle-pedido/1",
                 vista);
 
-        verify(detalleService).guardarDetalle(detalle);
+        verify(detalleService).guardarDetalle(argThat(guardado ->
+                guardado.getCantidad().equals(2)
+                        && guardado.getPedido() == pedido
+                        && guardado.getProducto() == producto));
     }
 
     @Test

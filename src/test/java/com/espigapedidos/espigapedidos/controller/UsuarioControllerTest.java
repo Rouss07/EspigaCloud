@@ -1,6 +1,7 @@
 package com.espigapedidos.espigapedidos.controller;
 
 import com.espigapedidos.espigapedidos.entity.Usuario;
+import com.espigapedidos.espigapedidos.form.UsuarioForm;
 import com.espigapedidos.espigapedidos.service.UsuarioService;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.Model;
@@ -41,24 +42,23 @@ class UsuarioControllerTest {
         String vista = controller.mostrarFormularioNuevo(model);
 
         assertEquals("usuarios/formulario", vista);
-        verify(model).addAttribute(eq("usuario"), any(Usuario.class));
+        verify(model).addAttribute(eq("usuario"), any(UsuarioForm.class));
     }
 
     @Test
     void guardarUsuario_debeRedirigirAUsuarios() {
         UsuarioService usuarioService = mock(UsuarioService.class);
 
-        Usuario u = new Usuario();
+        UsuarioForm u = new UsuarioForm();
         u.setUsername("ross");
-
-        when(usuarioService.guardarUsuario(u)).thenReturn(u);
 
         UsuarioController controller = new UsuarioController(usuarioService);
 
         String vista = controller.guardarUsuario(u);
 
         assertEquals("redirect:/usuarios", vista);
-        verify(usuarioService).guardarUsuario(u);
+        verify(usuarioService).guardarUsuario(argThat(guardado ->
+                "ross".equals(guardado.getUsername())));
     }
 
     @Test
@@ -76,7 +76,7 @@ class UsuarioControllerTest {
         String vista = controller.mostrarFormularioEditar(1L, model);
 
         assertEquals("usuarios/formulario", vista);
-        verify(model).addAttribute("usuario", u);
+        verify(model).addAttribute(eq("usuario"), any(UsuarioForm.class));
         verify(usuarioService).obtenerUsuarioPorId(1L);
     }
 

@@ -1,6 +1,7 @@
 package com.espigapedidos.espigapedidos.controller;
 
 import com.espigapedidos.espigapedidos.entity.Usuario;
+import com.espigapedidos.espigapedidos.form.UsuarioForm;
 import com.espigapedidos.espigapedidos.service.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,20 +25,20 @@ public class UsuarioController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        model.addAttribute("usuario", new Usuario());
+        model.addAttribute("usuario", new UsuarioForm());
         return "usuarios/formulario";
     }
 
     @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute Usuario usuario) {
-        usuarioService.guardarUsuario(usuario);
+    public String guardarUsuario(@ModelAttribute UsuarioForm usuario) {
+        usuarioService.guardarUsuario(usuario.toEntity());
         return "redirect:/usuarios";
     }
 
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
-        model.addAttribute("usuario", usuario);
+        model.addAttribute("usuario", UsuarioForm.fromEntity(usuario));
         return "usuarios/formulario";
     }
 

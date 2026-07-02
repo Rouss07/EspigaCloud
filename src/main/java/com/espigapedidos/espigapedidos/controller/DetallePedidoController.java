@@ -3,6 +3,7 @@ package com.espigapedidos.espigapedidos.controller;
 import com.espigapedidos.espigapedidos.entity.DetallePedido;
 import com.espigapedidos.espigapedidos.entity.Pedido;
 import com.espigapedidos.espigapedidos.entity.Producto;
+import com.espigapedidos.espigapedidos.form.DetallePedidoForm;
 import com.espigapedidos.espigapedidos.service.DetallePedidoService;
 import com.espigapedidos.espigapedidos.service.PedidoService;
 import com.espigapedidos.espigapedidos.service.ProductoService;
@@ -37,22 +38,23 @@ public class DetallePedidoController {
     public String mostrarFormularioNuevo(@PathVariable Long pedidoId, Model model) {
         model.addAttribute("pedido", pedidoService.obtenerPedidoPorId(pedidoId));
         model.addAttribute("productos", productoService.listarProductos());
-        model.addAttribute("detallePedido", new DetallePedido());
+        model.addAttribute("detallePedido", new DetallePedidoForm());
         return "detallepedido/formulario";
     }
 
     @PostMapping("/guardar")
-    public String guardarDetalle(@ModelAttribute DetallePedido detallePedido,
+    public String guardarDetalle(@ModelAttribute DetallePedidoForm detallePedido,
                                  @RequestParam("pedidoId") Long pedidoId,
                                  @RequestParam("productoId") Long productoId) {
 
         Pedido pedido = pedidoService.obtenerPedidoPorId(pedidoId);
         Producto producto = productoService.obtenerProductoPorId(productoId);
+        DetallePedido detalle = detallePedido.toEntity();
 
-        detallePedido.setPedido(pedido);
-        detallePedido.setProducto(producto);
+        detalle.setPedido(pedido);
+        detalle.setProducto(producto);
 
-        detallePedidoService.guardarDetalle(detallePedido);
+        detallePedidoService.guardarDetalle(detalle);
 
         return "redirect:/detalle-pedido/" + pedidoId;
     }

@@ -2,6 +2,7 @@ package com.espigapedidos.espigapedidos.controller;
 
 import com.espigapedidos.espigapedidos.entity.Pedido;
 import com.espigapedidos.espigapedidos.entity.Tienda;
+import com.espigapedidos.espigapedidos.form.PedidoForm;
 import com.espigapedidos.espigapedidos.service.PedidoService;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.springframework.stereotype.Controller;
@@ -9,10 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Controller
 @RequestMapping("/pedidos")
 public class PedidoController {
+
+    private static final ZoneId APP_ZONE = ZoneId.of("America/Lima");
 
     private final PedidoService pedidoService;
     private final TiendaService tiendaService;
@@ -30,25 +34,26 @@ public class PedidoController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDate.now());
+        PedidoForm pedido = new PedidoForm();
+        pedido.setFecha(LocalDate.now(APP_ZONE));
         model.addAttribute("pedido", pedido);
         model.addAttribute("tiendas", tiendaService.listarTiendas());
         return "pedidos/formulario";
     }
 
     @PostMapping("/guardar")
-    public String guardarPedido(@ModelAttribute Pedido pedido, @RequestParam("tienda") Long tiendaId) {
+    public String guardarPedido(@ModelAttribute PedidoForm pedido, @RequestParam("tienda") Long tiendaId) {
         Tienda tienda = tiendaService.obtenerTiendaPorId(tiendaId);
-        pedido.setTienda(tienda);
-        pedidoService.guardarPedido(pedido);
+        Pedido pedidoEntidad = pedido.toEntity();
+        pedidoEntidad.setTienda(tienda);
+        pedidoService.guardarPedido(pedidoEntidad);
         return "redirect:/pedidos";
     }
 
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.obtenerPedidoPorId(id);
-        model.addAttribute("pedido", pedido);
+        model.addAttribute("pedido", PedidoForm.fromEntity(pedido));
         model.addAttribute("tiendas", tiendaService.listarTiendas());
         return "pedidos/formulario";
     }

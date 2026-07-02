@@ -9,11 +9,13 @@ import com.espigapedidos.espigapedidos.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 final class E2ETestData {
 
     static final String ADMIN_USERNAME = "admin";
     static final String ADMIN_PASSWORD = "1234";
+    private static final LocalDate FECHA_PEDIDO_E2E = LocalDate.of(2026, Month.JULY, 1);
 
     private E2ETestData() {
     }
@@ -51,7 +53,7 @@ final class E2ETestData {
                 .findFirst()
                 .orElseGet(() -> {
                     Pedido pedido = new Pedido();
-                    pedido.setFecha(LocalDate.now());
+                    pedido.setFecha(FECHA_PEDIDO_E2E);
                     pedido.setEstado("Pendiente E2E");
                     pedido.setTienda(tienda);
                     return pedidoRepository.save(pedido);

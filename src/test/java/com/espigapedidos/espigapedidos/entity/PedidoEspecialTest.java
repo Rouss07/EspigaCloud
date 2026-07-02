@@ -3,10 +3,13 @@ package com.espigapedidos.espigapedidos.entity;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PedidoEspecialTest {
+
+    private static final LocalDate FECHA_ENTREGA = LocalDate.of(2026, Month.JULY, 4);
 
     @Test
     void validarPedidoEspecial() {
@@ -14,7 +17,7 @@ class PedidoEspecialTest {
 
         pedidoEspecial.setCliente("Rosa María");
         pedidoEspecial.setDescripcion("Torta personalizada de cumpleaños");
-        pedidoEspecial.setFechaEntrega(LocalDate.now().plusDays(3));
+        pedidoEspecial.setFechaEntrega(FECHA_ENTREGA);
         pedidoEspecial.setEstado("PENDIENTE");
 
         assertEquals("Rosa María", pedidoEspecial.getCliente());

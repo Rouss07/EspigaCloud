@@ -1,6 +1,7 @@
 package com.espigapedidos.espigapedidos.controller;
 
 import com.espigapedidos.espigapedidos.entity.Tienda;
+import com.espigapedidos.espigapedidos.form.TiendaForm;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,20 +25,20 @@ public class TiendaController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        model.addAttribute("tienda", new Tienda());
+        model.addAttribute("tienda", new TiendaForm());
         return "tiendas/formulario";
     }
 
     @PostMapping("/guardar")
-    public String guardarTienda(@ModelAttribute Tienda tienda) {
-        tiendaService.guardarTienda(tienda);
+    public String guardarTienda(@ModelAttribute TiendaForm tienda) {
+        tiendaService.guardarTienda(tienda.toEntity());
         return "redirect:/tiendas";
     }
 
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Tienda tienda = tiendaService.obtenerTiendaPorId(id);
-        model.addAttribute("tienda", tienda);
+        model.addAttribute("tienda", TiendaForm.fromEntity(tienda));
         return "tiendas/formulario";
     }
 

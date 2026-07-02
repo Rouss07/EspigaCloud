@@ -1,6 +1,7 @@
 package com.espigapedidos.espigapedidos.controller;
 
 import com.espigapedidos.espigapedidos.entity.Tienda;
+import com.espigapedidos.espigapedidos.form.TiendaForm;
 import com.espigapedidos.espigapedidos.service.TiendaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.Model;
@@ -41,24 +42,23 @@ class TiendaControllerTest {
         String vista = controller.mostrarFormularioNuevo(model);
 
         assertEquals("tiendas/formulario", vista);
-        verify(model).addAttribute(eq("tienda"), any(Tienda.class));
+        verify(model).addAttribute(eq("tienda"), any(TiendaForm.class));
     }
 
     @Test
     void guardarTienda_debeRedirigirATiendas() {
         TiendaService tiendaService = mock(TiendaService.class);
 
-        Tienda tienda = new Tienda();
+        TiendaForm tienda = new TiendaForm();
         tienda.setNombre("Sucursal Puno");
-
-        when(tiendaService.guardarTienda(tienda)).thenReturn(tienda);
 
         TiendaController controller = new TiendaController(tiendaService);
 
         String vista = controller.guardarTienda(tienda);
 
         assertEquals("redirect:/tiendas", vista);
-        verify(tiendaService).guardarTienda(tienda);
+        verify(tiendaService).guardarTienda(argThat(guardado ->
+                "Sucursal Puno".equals(guardado.getNombre())));
     }
 
     @Test
@@ -76,7 +76,7 @@ class TiendaControllerTest {
         String vista = controller.mostrarFormularioEditar(1L, model);
 
         assertEquals("tiendas/formulario", vista);
-        verify(model).addAttribute("tienda", tienda);
+        verify(model).addAttribute(eq("tienda"), any(TiendaForm.class));
         verify(tiendaService).obtenerTiendaPorId(1L);
     }
 
