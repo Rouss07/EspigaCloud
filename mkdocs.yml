@@ -36,12 +36,29 @@ theme:
 
 nav:
   - Inicio: index.md
-  - Cómo abrir MkDocs: como-abrir.md
   - Proyecto:
       - Visión general: proyecto.md
       - Arquitectura: arquitectura.md
   - Manual de usuario: manual-usuario.md
-  - Auditoría SDLC: auditoria.md
+  - Auditoría SDLC:
+      - Introducción: auditoria/index.md
+      - Metodología: auditoria/metodologia.md
+      - A01 - Gestión del proyecto: auditoria/a01-gestion.md
+      - A02 - Requerimientos: auditoria/a02-requerimientos.md
+      - A03 - Arquitectura: auditoria/a03-arquitectura.md
+      - A04 - Desarrollo: auditoria/a04-desarrollo.md
+      - A05 - Base de datos: auditoria/a05-base-datos.md
+      - A06 - Seguridad: auditoria/a06-seguridad.md
+      - A07 - Calidad: auditoria/a07-calidad.md
+      - A08 - Interfaces y servicios: auditoria/a08-interfaces.md
+      - A09 - Documentación: auditoria/a09-documentacion.md
+      - A10 - Manuales: auditoria/a10-manuales.md
+      - A11 - Evidencias: auditoria/a11-evidencias.md
+      - A12 - GitHub y configuración: auditoria/a12-github.md
+      - Hallazgos: auditoria/hallazgos.md
+      - Riesgos: auditoria/riesgos.md
+      - Recomendaciones: auditoria/recomendaciones.md
+      - Conclusión: auditoria/conclusion.md
   - Calidad:
       - Pruebas, cobertura y SonarQube: calidad.md
       - Informe de pruebas: INFORME_PRUEBAS_SISTEMA.md

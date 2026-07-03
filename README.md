@@ -19,9 +19,7 @@ Incluye:
 
 ## Abrir la documentación localmente
 
-En Windows, ejecute `abrir-documentacion.bat` con doble clic.
-
-También puede hacerlo manualmente:
+Abra PowerShell en la carpeta del proyecto y ejecute:
 
 ```powershell
 python -m venv .venv-docs

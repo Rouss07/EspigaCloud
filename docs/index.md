@@ -18,7 +18,7 @@ Este sitio reúne en un único lugar la documentación del producto desarrollado
 ## Accesos rápidos
 
 - [Comenzar con el manual de usuario](manual-usuario.md)
-- [Consultar la auditoría SDLC](auditoria.md)
+- [Consultar la auditoría SDLC](auditoria/index.md)
 - [Revisar pruebas, cobertura y SonarQube](calidad.md)
 - [Entender el pipeline Jenkins](cicd.md)
 - [Descargar todas las evidencias](evidencias.md)
