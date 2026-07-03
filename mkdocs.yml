@@ -36,6 +36,7 @@ theme:
 
 nav:
   - Inicio: index.md
+  - Cómo abrir MkDocs: como-abrir.md
   - Proyecto:
       - Visión general: proyecto.md
       - Arquitectura: arquitectura.md
