@@ -110,7 +110,7 @@ export default function () {
             sleep(0.5);
 
             const uniqueId = `${__VU}_${__ITER}_${Date.now()}`;
-            const estados = ['ACTIVO', 'INACTIVO', 'PENDIENTE'];
+            const estados = ['Activo', 'Inactivo'];
 
             const createPayload = {
                 nombre: `Tienda Smoke ${uniqueId}`,
@@ -127,7 +127,8 @@ export default function () {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Cookie': `JSESSIONID=${authCookie}`
                 },
-                tags: { name: 'POST_guardar' }
+                tags: { name: 'POST_guardar' },
+                redirects: 0
             });
 
             requestDuration.add(Date.now() - createStart);

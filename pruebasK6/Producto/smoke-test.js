@@ -127,7 +127,8 @@ export default function () {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Cookie': `JSESSIONID=${authCookie}`
                 },
-                tags: { name: 'POST_guardar' }
+                tags: { name: 'POST_guardar' },
+                redirects: 0
             });
 
             requestDuration.add(Date.now() - createStart);

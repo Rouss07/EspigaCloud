@@ -38,3 +38,5 @@ devops/.env
 /node_modules/
 /test-results/
 /package.json
+/.venv-docs/
+/site/
